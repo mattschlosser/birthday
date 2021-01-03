@@ -1,22 +1,36 @@
 <template>
   <div id="app">
-    <button class="btn" @click="reset">New</button>
-    <button class="btn" @click="() => editing = !editing">Edit</button>
-    <input type="file" class="btn" @change="load($event)"/>
+    <h1 class="center">
+      Simple Birthday Calendar
+    </h1>
+    <div class="center container">
+      <div class='left'>
+        Add birthdays and anniversaries to this calendar. The calendar
+        displays the events colour-coded by category, and automatically 
+        shows the age the person is turning on that day (e.g. Bob's 1st Birthday)
+      </div>
+    </div>
+    <button class="btn" @click="askReset">Clear Everything</button>
+    <button class="btn" @click="() => editing = !editing">Add Birthdays</button>
+    <input  type="file" class="btn" @change="load($event)"/>
     <a  class="btn" :href="saveFile" target="_blank">Save</a>
+    <transition name="fade">
     <div v-if="editing">
-      <h2 class="center">Families</h2>
+      <h2 class="center">Categories</h2>
       <form @submit.prevent="addFamily">
-        <div>
-          <label for="familyName">Family</label>
-          <input name="familyName" v-model="familyName">
-        </div>
-        <div>
-          <label for="color">Colour</label>
-          <input name="color" v-model="color" type="color">
+        <div class="form">
+          <div>
+            <label for="familyName">Category</label>
+            <input name="familyName" v-model="familyName">
+          </div>
+          <div>
+            <label for="color">Colour</label>
+            <input name="color" v-model="color" type="color">
+            <button>Add Category</button>
+          </div>
         </div>
       </form>
-      <table style="width: 100%;">
+      <table class="table">
         <thead>
           <tr>
             <th>Name</th>
@@ -33,59 +47,70 @@
         </tbody>
       </table>
       <h2 class="center">Birthdays</h2>
-    <form @submit.prevent="addToList">
-      <div>
-        <label for="type">Type</label>
-        <select required name="type" v-model="type">
-          <option value="Birthday">Birthday</option>
-          <option>Anniversary</option>
-        </select>
-      </div>
-      <div>
-        <label for="family">Family</label>
-        <select required name="family" v-model="family">
-          <option v-for="fam in families" :key="fam">
-            {{fam.name}}
-          </option>
-        </select>
-      </div>
-      <div>
-        <label for="name">Name</label>
-        <input required name="name" v-model="name">
-      </div>
-      <div>
-        <label for="date">Date</label>
-        <input required v-model="date" type="date">
-      <button type="submit">Add</button>
-      </div>
-    </form>
-    <table style="width: 100%;"> 
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Date</th>
-          <th>Type</th>
-          <th>Family</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(bday, i) in bdays" :key="i">
-          <td>{{bday.name}}</td>
-          <td>{{bday.date}}</td>
-          <td>{{bday.type}}</td>
-          <td>{{bday.fam}}</td>
-          <td> <button type="button" @click="remove(i)">Delete</button></td>
-        </tr>
-      </tbody>
-    </table>
+      <template v-if="families.length">
+        <form @submit.prevent="addToList">
+          <div class="form">
+            <div>
+              <label for="type">Type</label>
+              <select required name="type" v-model="type">
+                <option value="Birthday">Birthday</option>
+                <option>Anniversary</option>
+              </select>
+            </div>
+            <div>
+              <label for="family">Category</label>
+              <select required name="family" v-model="family">
+                <option v-for="fam in families" :key="fam">
+                  {{fam.name}}
+                </option>
+              </select>
+            </div>
+            
+            <div>
+              <label for="name">Name</label>
+              <input required name="name" v-model="name">
+            </div>
+            <div>
+              <label for="date">Date</label>
+              <input required v-model="date" type="date">
+              <button type="submit">Add</button>
+            </div>
+          </div>
+        </form>
+      <table class="table"> 
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Family</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(bday, i) in bdays" :key="i">
+            <td>{{bday.name}}</td>
+            <td>{{bday.date}}</td>
+            <td>{{bday.type}}</td>
+            <td>{{bday.fam}}</td>
+            <td> <button type="button" @click="remove(i)">Delete</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
+    <template v-else>
+      <div class="message">Before you can add birthdays, add at least one category</div>
+    </template>
     </div>
+    </transition>
     <calendar :families="families" :items="bdays"/>
   </div>
 </template>
 
 <script>
 import Calendar from './components/Calendar.vue';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css'
 if (!localStorage.birthdays) {
   localStorage.birthdays = JSON.stringify([])
 }
@@ -121,19 +146,45 @@ export default {
     }, 
   },
   methods: {
+    /**
+     * Adds a family category to the list
+     */
     addFamily() {
       let {familyName, color} = this;
       this.families.push({name: familyName, color});
       localStorage.families = JSON.stringify(this.families)
     },  
+    /**
+     * Removes a category/family from the list
+     * 
+     * @param {Number} i The index of the item to remove
+     */
+    removeFam(i) {
+      this.families.splice(i, 1);
+      localStorage.families = JSON.stringify(this.families);
+    },
+    /**
+     * Adds a birthdate/anniversary
+     */
     addToList() {
       let {type, name, date, family:fam} = this;
       this.bdays.push({type, name, date, fam});
       localStorage.birthdays = JSON.stringify(this.bdays)
     },
+    /**
+     * Removes a birthday from the list
+     * 
+     * @param {Number} i the index of the item to remove
+     */
+    remove(i) {
+      this.bdays.splice(i, 1);
+      localStorage.birthdays = JSON.stringify(this.bdays);
+    },
+    /**
+     * Loads a saved file into the database
+     */
     load(event) {
       const f = new FileReader();
-      console.log(event.target.files);
       f.readAsText(event.target.files[0]);
       const vm = this;
       f.onload = function() {
@@ -146,19 +197,28 @@ export default {
         }
       }
     },
+    async askReset() {
+      let res = await Swal.fire({
+        title: "Reset calendar", 
+        text: "This will remove all events/categories. Are you sure you want to continue?", 
+        icon: "warning",
+        showCancelButton: true, 
+        confirmButtonText: "Reset", 
+        focusCancel: true
+      });
+      if (!res.dismiss) {
+        this.reset();
+      }
+    },
+    /**
+     * Clears all data in the database
+     */
     reset() {
       this.bdays = [];
       this.families = [];
       localStorage.birthdays = "";
+      localStorage.families = "";
     },
-    remove(i) {
-      this.bdays.splice(i, 1);
-      localStorage.birthdays = JSON.stringify(this.bdays);
-    },
-    removeFam(i) {
-      this.families.splice(i, 1);
-      localStorage.families = JSON.stringify(this.families);
-    }
   }
 }
 </script>
@@ -190,6 +250,71 @@ a {
 }
 .center {
   text-align: center;
+}
+.message {
+  background: lightblue;
+  color: darkblue;
+  box-sizing: border-box;
+  padding: 15px;
+  border-radius: 4px 4px;
+}
+.form {
+  padding: 15px;
+  border:1px solid  #ccc;
+  box-shadow: 5px 5px 10px #ccc;;
+  box-sizing: border-box;
+}
+.table {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+}
+.table th {
+  background: lightgray;
+}
+.table td {
+  padding: 5px;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+  transform: translateY(-400px);
+}
+.fade-enter-active, .fade-leave-active {
+  transition: all .3s;
+}
+.fade-enter-active {
+  transition-timing-function: ease-in;
+}
+.fade-leave-active {
+  transition-timing-function: ease-out;
+}
+.btn {
+  background-color: white;
+  text-transform: uppercase;
+  border: none;
+  box-shadow: 4px 4px 8px #ccc;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin: auto 6px; 
+}
+.left {
+  text-align: left;
+}
+.container {
+  width: 100%;
+}
+.btn:hover {
+  background-color: #aaa;
+}
+@media screen and (min-width: 500px) {
+  .table {
+    margin: 0 auto;
+    width: 50%;
+  }
+  .container {
+    margin: 15px auto;
+    width: 50%;
+  }
 }
 </style>
 

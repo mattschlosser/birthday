@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "sweetalert2": "^10.12.7",
     "vue": "^2.6.11",
     "vue-simple-calendar": "^5.0.0"
   },

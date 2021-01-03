@@ -1,7 +1,9 @@
 <template>
-   <div id="app" @click="() => { showDate.setMonth(showDate.getMonth()+1); showDate = new Date(showDate); }">
-       <h1 class="center" contenteditable="true">{{['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][showDate.getMonth()]}} {{showDate.getFullYear()}}</h1>
+   <div id="app">
+       <button  @click="() => { showDate.setMonth(showDate.getMonth()-1); showDate = new Date(showDate); }"> &lt; </button>
+       <h1 style="display: inline-block; padding-left: 15px; padding-right: 15px;" class="center" contenteditable="true">{{['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][showDate.getMonth()]}} {{showDate.getFullYear()}}</h1>
 
+       <button  @click="() => { showDate.setMonth(showDate.getMonth()+1); showDate = new Date(showDate); }"> &gt; </button>
         <calendar-view
             :items="myItems"
             itemContentHeight="2.1em"
