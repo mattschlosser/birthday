@@ -1,4 +1,4 @@
-# bday
+# Simple Birthday and Anniversary Calendar with Ages
 
 Birthday is a simple birthday calendar that runs entirely on the client side. 
 
