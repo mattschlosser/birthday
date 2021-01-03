@@ -1,6 +1,6 @@
 <template>
    <div id="app" @click="() => { showDate.setMonth(showDate.getMonth()+1); showDate = new Date(showDate); }">
-       <h1 contenteditable="true">{{['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][showDate.getMonth()]}} {{showDate.getFullYear()}}</h1>
+       <h1 class="center" contenteditable="true">{{['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][showDate.getMonth()]}} {{showDate.getFullYear()}}</h1>
 
         <calendar-view
             :items="myItems"
@@ -36,7 +36,8 @@ function nth(date) {
 }
 export default {
     props: {
-        items: Array
+        items: Array,
+        families: Array
     }, 
     data: function() {
         return { showDate: new Date('2021-01-02') }
@@ -45,12 +46,11 @@ export default {
         myItems() {
             return this.items.map((e, i) => {
                 let d = `2021-${e.date.slice(5)}`;
-
-                console.log(d == '2021-05-29', d.length);
                 return {
                     id: i, 
                     startDate:  d,
                     title: `${e.name}'s\n${nth(e.date)} ${e.type}`,
+                    style: `color: ${this.families.find(r => r.name == e.fam).color}`,
                     classes: `${e.fam} ${d == '2021-05-29' || d == '2021-06-28' || d == '2021-07-01'  || d == '2021-07-20' || d == '2021-07-24'   || d == '2021-07-26' || d == '2021-07-27'  ? 'tinier' : 'tiny'}`,
                     itemContentHeight: d == '2021-05-29' || d == '2021-06-28' || d == '2021-07-01'  || d == '2021-07-20' || d == '2021-07-24' || d == '2021-07-26' || d == '2021-07-27' ? '2em' : '2.8em'
                 }
@@ -70,6 +70,7 @@ export default {
 <style  scoped>
     #app {
         height: 100vh;
+        text-align: center;
     }
 </style>
 <style>
@@ -87,36 +88,5 @@ export default {
     }
     .tinier {
         font-size: 1em !important;
-    }
-    .Alice {
-        color: #33ff !important;
-    }
-    .Alvin {
-        color: #3f3f !important;
-    }
-    .Anne {
-        color: #f99f !important;
-    }
-    .Ruby {
-        color: #f33f !important;
-    }
-
-    .Erwin {
-        color: rgb(39, 139, 134) !important;
-    }
-    .Donald {
-        color: rgb(87, 48, 36) !important;
-    }
-    .Ken {
-        color: #336f !important;
-    }
-    .Evelyn {
-        color: #363f !important;
-    }
-    .Martha {
-        color: #f3ff !important;
-    }
-    .Caroline {
-        color: rgba(126, 61, 1, 0.667) !important;
     }
 </style>
