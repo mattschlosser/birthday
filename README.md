@@ -1,5 +1,18 @@
 # bday
 
+Birthday is a simple birthday calendar that runs entirely on the client side. 
+
+* Add birthdays and anniversaries of relatives
+* Colour-coded
+* Automatically calculates age of each person
+
+## Example 
+
+![](src/assets/jan2021-sample.png)
+
+
+# Developing
+
 ## Project setup
 ```
 yarn install
