@@ -9,7 +9,7 @@ Birthday is a simple birthday calendar that runs entirely on the client side.
 
 ## Motivation
 
-Each year, I have been faithfully maintainin my extended family's birthday calendar. Each year, birthdays and anniversaries are added, ages are updated, and mistakes fixed. Why not just put the year they were born, you ask? Because the age is much nicer, and doesn't require you to do mental math on the fly, when the computer can do it for you!
+Each year, I have been maintaining my extended family's birthday and anniversary calendar. It has the birthdays and anniversaries of my aunts & uncles, parents, sibilings, nephews, nieces and cousins. Each year, birthdays and anniversaries are added, ages are updated, and mistakes fixed. Why not just put the year they were born, you ask? Because the age is much nicer, and doesn't require you to do mental math on the fly, when the computer can do it for you!
 
 This was becoming quite the task, as my extended family is quite large. So rather than have to load up the calendar, and manually change everyone's birthday
 on a version of Printmaster from two decades ago, I decided to create a simple tool to accomplish this task.
