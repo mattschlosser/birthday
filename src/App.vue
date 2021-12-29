@@ -238,7 +238,7 @@ export default {
       f.onload = function() {
         let it = JSON.parse(this.result);
         if (it.version === 1) {
-          vm.fams = it.fams;
+          vm.families = it.fams;
           vm.bdays = it.bdays;
           localStorage.birthdays = JSON.stringify(it.bdays);
           localStorage.families = JSON.stringify(it.fams);
