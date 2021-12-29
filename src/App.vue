@@ -12,7 +12,7 @@
     </div>
     <button class="btn" @click="askReset">Clear Everything</button>
     <button class="btn" @click="() => editing = !editing">Add Birthdays</button>
-    <button class="btn" @click="load" type="button">Load</button>
+    <input  type="file" class="btn" @change="load($event)"/>
     <a  class="btn" :href="saveFile" target="_blank">Save</a>
     <transition name="fade">
     <div v-if="editing">
