@@ -15,6 +15,7 @@
     <input  type="file" class="btn" @change="load($event)"/>
     <input type="number" v-model.lazy="year" />
     <a  class="btn" :href="saveFile" target="_blank">Save</a>
+    <button class="btn" type="button" @click="exportCal">Export</button>
     <transition name="fade">
     <div v-if="editing">
       <h2 class="center">Categories</h2>
@@ -104,12 +105,15 @@
     </template>
     </div>
     </transition>
-    <calendar :families="families" :year="year" :items="bdays"/>
+    <div id="calendar">
+      <calendar :families="families" ref="cal" :year="year" :items="bdays"/>
+    </div>
   </div>
 </template>
 
 <script>
 import Calendar from './components/Calendar.vue';
+import {jsPDF} from 'jspdf';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css'
 if (!localStorage.birthdays) {
@@ -118,12 +122,17 @@ if (!localStorage.birthdays) {
 if (!localStorage.families) {
   localStorage.families = JSON.stringify([]);
 }
+import html2canvas from 'html2canvas';
 export default {
   components: { Calendar },
   name: 'HelloWorld',
   bdays: [],
   props: {
-    msg: String
+    msg: String, 
+    margin: {
+      type: Number, 
+      default: 0.25 // inches
+    }
   },
   data: () => ({
     editing: false,
@@ -148,6 +157,43 @@ export default {
     }, 
   },
   methods: {
+    /** 
+     * Exports the current year loaded as a PDF, where each page is one month of the year. 
+     */
+    async exportCal() {
+      // create the pdf
+      let pdf = new jsPDF({
+        orientation: "landscape", 
+        unit: "in",
+        format: "letter"
+      })
+      let date = new Date(`${this.year}-01-02`);
+      let months = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+      for (let month of months) {
+        // change to the next month
+        date.setMonth(month);
+        this.$refs.cal.setShowDate(new Date(date));
+        await this.$nextTick();
+        // generate a canvas of the calendar for the new month
+        let canvas = await html2canvas(document.getElementById("calendar"), {
+          height: 1840 * 8.5 /11,
+          width: 1840,
+        });
+        // save the canvas as an image
+        let img = canvas.toDataURL();
+        // add a new page if not the first month
+        if (month !== 0) {
+          pdf.addPage({
+            orientation: "landscape", 
+            format: "letter"
+          })
+        }
+        // add the new image to the document
+        pdf.addImage(img, 'PNG', 0 + this.margin,0 + this.margin, 11 - this.margin * 2, 11 * canvas.height / canvas.width - this.margin * 2 );
+      }
+      // save the pdf
+      pdf.save(`${this.year}.pdf`);
+    },
     /**
      * Adds a family category to the list
      */

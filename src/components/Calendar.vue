@@ -72,7 +72,8 @@ export default {
 </script>
 <style  scoped>
     #app {
-        height: 100vh;
+        height: 130vh;
+        font-size: 1.4rem;
         text-align: center;
     }
 </style>
