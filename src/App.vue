@@ -13,6 +13,7 @@
     <button class="btn" @click="askReset">Clear Everything</button>
     <button class="btn" @click="() => editing = !editing">Add Birthdays</button>
     <input  type="file" class="btn" @change="load($event)"/>
+    <input type="number" v-model.lazy="year" />
     <a  class="btn" :href="saveFile" target="_blank">Save</a>
     <transition name="fade">
     <div v-if="editing">
@@ -103,7 +104,7 @@
     </template>
     </div>
     </transition>
-    <calendar :families="families" :items="bdays"/>
+    <calendar :families="families" :year="year" :items="bdays"/>
   </div>
 </template>
 
@@ -127,6 +128,7 @@ export default {
   data: () => ({
     editing: false,
     type: "Birthday",
+    year: 2022,
     name: '',
     date: '',
     bdays: JSON.parse(localStorage.birthdays),
