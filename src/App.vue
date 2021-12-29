@@ -12,7 +12,6 @@
     </div>
     <button class="btn" @click="askReset">Clear Everything</button>
     <button class="btn" @click="() => editing = !editing">Add Birthdays</button>
-    <input  type="file" class="btn" @change="load($event)"/>
     <button class="btn" @click="load" type="button">Load</button>
     <a  class="btn" :href="saveFile" target="_blank">Save</a>
     <transition name="fade">
@@ -185,7 +184,6 @@ export default {
      * Loads a saved file into the database
      */
     load(event) {
-      console.log(event);
       const f = new FileReader();
       f.readAsText(event.target.files[0]);
       const vm = this;
