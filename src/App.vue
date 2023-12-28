@@ -112,7 +112,7 @@
 </template>
 
 <script>
-import Calendar from './components/Calendar.vue';
+import Calendar from './components/CalendarComponent.vue';
 import {jsPDF} from 'jspdf';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css'

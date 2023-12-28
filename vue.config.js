@@ -1,3 +1,8 @@
 module.exports = {
-    outputDir: 'docs/'
+    outputDir: 'docs/',
+    configureWebpack: {
+      output: {
+        hashFunction: "sha256"
+      }
+    }
 }
