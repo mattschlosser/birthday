@@ -224,6 +224,8 @@ export default {
       let {type, name, date, family:fam} = this;
       this.bdays.push({type, name, date, fam});
       localStorage.birthdays = JSON.stringify(this.bdays)
+      this.name = '';
+      this.date = '';
     },
     /**
      * Removes a birthday from the list
