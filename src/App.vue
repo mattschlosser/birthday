@@ -106,7 +106,7 @@
     </div>
     </transition>
     <div id="calendar">
-      <calendar :families="families" ref="cal" :year="year" :items="bdays"/>
+      <calendar :hide-controls="hideControls" :families="families" ref="cal" :year="year" :items="bdays"/>
     </div>
   </div>
 </template>
@@ -138,6 +138,7 @@ export default {
     editing: false,
     type: "Birthday",
     year: 2022,
+    hideControls: false,
     name: '',
     date: '',
     bdays: JSON.parse(localStorage.birthdays),
@@ -168,6 +169,7 @@ export default {
         format: "letter"
       })
       let date = new Date(`${this.year}-01-02`);
+      this.hideControls = true;
       let months = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
       for (let month of months) {
         // change to the next month
@@ -180,7 +182,7 @@ export default {
           width: 1840,
         });
         // save the canvas as an image
-        let img = canvas.toDataURL();
+        let img = canvas.toDataURL('image/webp', 0.9); 
         // add a new page if not the first month
         if (month !== 0) {
           pdf.addPage({
@@ -189,9 +191,10 @@ export default {
           })
         }
         // add the new image to the document
-        pdf.addImage(img, 'PNG', 0 + this.margin,0 + this.margin, 11 - this.margin * 2, 11 * canvas.height / canvas.width - this.margin * 2 );
+        pdf.addImage(img, 'WEBP', 0 + this.margin,0 + this.margin, 11 - this.margin * 2, 11 * canvas.height / canvas.width - this.margin * 2, null, 'FAST');
       }
       // save the pdf
+      this.hideControls = false;
       pdf.save(`${this.year}.pdf`);
     },
     /**

@@ -1,9 +1,9 @@
 <template>
    <div id="app">
-       <button  @click="() => { showDate.setMonth(showDate.getMonth()-1); showDate = new Date(showDate); }"> &lt; </button>
+       <button v-if="!hideControls" @click="() => { showDate.setMonth(showDate.getMonth()-1); showDate = new Date(showDate); }"> &lt; </button>
        <h1 style="display: inline-block; padding-left: 15px; padding-right: 15px;" class="center" contenteditable="true">{{['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][showDate.getMonth()]}} {{showDate.getFullYear()}}</h1>
 
-       <button  @click="() => { showDate.setMonth(showDate.getMonth()+1); showDate = new Date(showDate); }"> &gt; </button>
+       <button v-if="!hideControls"  @click="() => { showDate.setMonth(showDate.getMonth()+1); showDate = new Date(showDate); }"> &gt; </button>
         <calendar-view
             :items="myItems"
             itemContentHeight="2.1em"
@@ -40,13 +40,30 @@ export default {
     props: {
         items: Array,
         families: Array, 
-        year: Number
+        year: Number, 
+        hideControls: Boolean
     }, 
     data: function() {
         return { showDate: new Date(`${this.year}-01-02`) }
     },
     computed: {
         myItems() {
+            let tinier = ['05-02',  '06-28','07-01', '07-06', '07-09', '07-12', '07-20','07-26', '07-27', '12-08'];
+            let tiniest = ['07-24'];
+            const classes = (e) => {
+                let result = [e.fam];
+                let d = `${this.year}-${e.date.slice(5)}`;   
+                let tiniestDates = tiniest.map(date => `${this.year}-${date}`);
+                let tinierDates = tinier.map(date => `${this.year}-${date}`);
+                if (tiniestDates.includes(d)) {
+                    result.push(`tiniest`);
+                } else if (tinierDates.includes(d)) {
+                    result.push(`tinier`)
+                } else {
+                    result.push(`tiny`);
+                }
+                return result.join(' ');
+            }
             return this.items.map((e, i) => {
                 let d = `${this.year}-${e.date.slice(5)}`;
                 return {
@@ -54,8 +71,8 @@ export default {
                     startDate:  d,
                     title: `${e.name}'s\n${nth(e.date, this.year)} ${e.type}`,
                     style: `color: ${this.families.find(r => r.name == e.fam).color}`,
-                    classes: `${e.fam} ${d == `${this.year}-05-29` || d == `${this.year}-06-28` || d == `${this.year}-07-01`  || d == `${this.year}-07-20` || d == `${this.year}-07-24`   || d == `${this.year}-07-26` || d == `${this.year}-07-27`  ? 'tinier' : 'tiny'}`,
-                    itemContentHeight: d == `${this.year}-05-29` || d == `${this.year}-06-28` || d == `${this.year}-07-01`  || d == `${this.year}-07-20` || d == `${this.year}-07-24` || d == `${this.year}-07-26` || d == `${this.year}-07-27` ? '2em' : '2.8em'
+                    classes:  classes(e), // `${e.fam} ${d == `${this.year}-05-29` || d == `${this.year}-06-28`  || d == `${this.year}-07-01` || d == `${this.year}-07-20` || d == `${this.year}-07-24`   || d == `${this.year}-07-26` || d == `${this.year}-07-27`  ? 'tinier' : 'tiny'}`,
+                    itemContentHeight: d == `${this.year}-05-29` || d == `${this.year}-06-28`  || d == `${this.year}-07-01` || d == `${this.year}-07-20` || d == `${this.year}-07-24` || d == `${this.year}-07-26` || d == `${this.year}-07-27` ? '2em' : '2.8em'
                 }
             })
         }
@@ -73,7 +90,7 @@ export default {
 <style  scoped>
     #app {
         height: 130vh;
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         text-align: center;
     }
 </style>
@@ -87,10 +104,13 @@ export default {
         background: white !important;
         border: none !important;
     }
-    .tiny {
-        font-size: 1.2em !important;
-    }
     .tinier {
-        font-size: 1em !important;
+        font-size: 1rem !important;
+    }
+    .tiniest {
+        font-size: 0.8rem !important;
+    }
+    .today {
+        background-color: whtie !important;
     }
 </style>
