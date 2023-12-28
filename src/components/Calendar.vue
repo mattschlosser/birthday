@@ -48,7 +48,7 @@ export default {
     },
     computed: {
         myItems() {
-            let tinier = ['05-02',  '06-28','07-01', '07-06', '07-09', '07-12', '07-20','07-26', '07-27', '12-08'];
+            let tinier = ['05-02', '02-25',  '06-28','07-01', '07-06', '07-09', '07-12', '07-20','07-26', '07-27', '12-08'];
             let tiniest = ['07-24'];
             const classes = (e) => {
                 let result = [e.fam];
@@ -69,7 +69,7 @@ export default {
                 return {
                     id: i, 
                     startDate:  d,
-                    title: `${e.name}'s\n${nth(e.date, this.year)} ${e.type}`,
+                    title: `${e.name.at(-1) == 's' ? `${e.name}'` : `${e.name}'s`}\n${nth(e.date, this.year)} ${e.type}`,
                     style: `color: ${this.families.find(r => r.name == e.fam).color}`,
                     classes:  classes(e), // `${e.fam} ${d == `${this.year}-05-29` || d == `${this.year}-06-28`  || d == `${this.year}-07-01` || d == `${this.year}-07-20` || d == `${this.year}-07-24`   || d == `${this.year}-07-26` || d == `${this.year}-07-27`  ? 'tinier' : 'tiny'}`,
                     itemContentHeight: d == `${this.year}-05-29` || d == `${this.year}-06-28`  || d == `${this.year}-07-01` || d == `${this.year}-07-20` || d == `${this.year}-07-24` || d == `${this.year}-07-26` || d == `${this.year}-07-27` ? '2em' : '2.8em'
