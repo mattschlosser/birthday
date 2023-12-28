@@ -3,19 +3,19 @@
     <h1 class="center">
       Simple Birthday Calendar
     </h1>
-    <div class="center container">
-      <div class='left'>
+    <div class="container">
+      <div class='left mb-3'>
         Add birthdays and anniversaries to this calendar. The calendar
         displays the events colour-coded by category, and automatically 
         shows the age the person is turning on that day (e.g. Bob's 1st Birthday)
       </div>
+      <button class="btn" @click="askReset">Clear Everything</button>
+      <button class="btn" @click="() => editing = !editing">Add Birthdays</button>
+      <input  type="file" class="btn" @change="load($event)"/>
+      <input type="number" v-model.lazy="year" @change="updateDate($event)" />
+      <a  class="btn" :href="saveFile" target="_blank">Save</a>
+      <button class="btn" type="button" @click="exportCal">Export</button>
     </div>
-    <button class="btn" @click="askReset">Clear Everything</button>
-    <button class="btn" @click="() => editing = !editing">Add Birthdays</button>
-    <input  type="file" class="btn" @change="load($event)"/>
-    <input type="number" v-model.lazy="year" />
-    <a  class="btn" :href="saveFile" target="_blank">Save</a>
-    <button class="btn" type="button" @click="exportCal">Export</button>
     <transition name="fade">
     <div v-if="editing">
       <h2 class="center">Categories</h2>
@@ -158,6 +158,9 @@ export default {
     }, 
   },
   methods: {
+    updateDate(event) {
+      this.$refs.cal.setShowDate(new Date(`${event.target.value}-01-02`));
+    },
     /** 
      * Exports the current year loaded as a PDF, where each page is one month of the year. 
      */
@@ -378,5 +381,8 @@ a {
   /* text-align: center; */
   color: #2c3e50;
   margin-top: 60px;
+}
+.mb-3 {
+  margin-block-end: 1.2rem;
 }
 </style>
