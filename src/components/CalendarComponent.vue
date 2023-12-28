@@ -108,7 +108,8 @@ export default {
         font-size: 1rem !important;
     }
     .tiniest {
-        font-size: 0.8rem !important;
+        font-size: 0.9rem !important;
+        margin-top: 13px !important;
     }
     .today {
         background-color: whtie !important;
