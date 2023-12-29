@@ -100,8 +100,8 @@ export default {
     }
     .cv-item {
         white-space: pre-wrap !important;
-        font-weight: 800;;
-        background: white !important;
+        font-weight: 800;
+        background: #fff0 !important;
         border: none !important;
     }
     .tinier {
