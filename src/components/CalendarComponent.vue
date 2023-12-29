@@ -100,7 +100,7 @@ export default {
     }
     .cv-item {
         white-space: pre-wrap !important;
-        font-weight: 800;
+        font-weight: 700;
         background: #fff0 !important;
         border: none !important;
     }
