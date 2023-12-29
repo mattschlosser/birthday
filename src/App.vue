@@ -180,9 +180,10 @@ export default {
         this.$refs.cal.setShowDate(new Date(date));
         await this.$nextTick();
         // generate a canvas of the calendar for the new month
+
         let canvas = await html2canvas(document.getElementById("calendar"), {
-          height: 1840 * 8.5 /11,
-          width: 1840,
+          height: window.innerWidth * 8.5 /11,
+          width: window.innerWidth,
         });
         // save the canvas as an image
         let img = canvas.toDataURL('image/webp', 0.9); 
